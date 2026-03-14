@@ -1,0 +1,218 @@
+/* ═══════════════════════════════════════════════════════════
+   AllCandidates — Premium Talent Pool
+   ═══════════════════════════════════════════════════════════ */
+
+.ac-page {
+  min-height: 100vh;
+}
+
+.ac-main {
+  position: relative;
+  z-index: 1;
+  padding: 32px 24px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.ac-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  animation: fadeUp 0.4s var(--ease-out);
+}
+
+.ac-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ac-refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(8px);
+}
+
+.ac-refresh-btn:hover {
+  color: var(--accent-primary);
+  background: var(--accent-primary-glow);
+  border-color: rgba(124, 92, 252, 0.2);
+}
+
+/* Card Grid */
+.ac-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+/* Candidate Card */
+.ac-card {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all var(--transition-normal);
+  overflow: hidden;
+  animation: fadeUp 0.4s var(--ease-out) both;
+}
+
+.ac-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.ac-card:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--shadow-md), 0 0 24px rgba(124, 92, 252, 0.06);
+  transform: translateY(-2px);
+}
+
+.ac-card:hover::before {
+  opacity: 1;
+}
+
+/* Card Header */
+.ac-card-header {
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.ac-card-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.ac-card-info {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ac-card-role {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.ac-card-role span {
+  color: var(--accent-primary);
+  text-transform: capitalize;
+}
+
+/* Skills Section */
+.ac-card-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+}
+
+.ac-card-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.ac-skill-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--accent-primary-glow);
+  color: var(--accent-primary-hover);
+  border: 1px solid rgba(124, 92, 252, 0.12);
+  transition: all var(--transition-fast);
+}
+
+.ac-skill-badge:hover {
+  background: rgba(124, 92, 252, 0.2);
+  border-color: rgba(124, 92, 252, 0.25);
+}
+
+/* Experience */
+.ac-card-exp {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.ac-card-exp strong {
+  color: var(--text-primary);
+}
+
+/* Loading & Empty */
+.ac-loading,
+.ac-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+  font-size: 15px;
+  animation: fadeIn 0.5s var(--ease-out);
+}
+
+.ac-loading::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--glass-border);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ac-main {
+    padding: 20px 16px 40px;
+  }
+
+  .ac-title {
+    font-size: 24px;
+  }
+
+  .ac-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ac-card {
+    padding: 20px;
+  }
+}

@@ -1,0 +1,175 @@
+/* ═══════════════════════════════════════════════════════════
+   Navbar — Glassmorphism Premium Nav
+   ═══════════════════════════════════════════════════════════ */
+
+.rc-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 64px;
+  background: rgba(6, 8, 15, 0.75);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--glass-border);
+  transition: background var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.rc-navbar.scrolled {
+  background: rgba(6, 8, 15, 0.92);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Logo ──────────────────────────────────────────────── */
+.rc-navbar-logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity var(--transition-fast);
+}
+
+.rc-navbar-logo:hover {
+  opacity: 0.85;
+}
+
+/* ── Desktop Links ─────────────────────────────────────── */
+.rc-navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rc-navbar-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.rc-navbar-link:hover {
+  color: var(--text-primary);
+  background: var(--color-surface-hover);
+}
+
+.rc-navbar-link.active {
+  color: var(--accent-primary);
+  background: var(--accent-primary-glow);
+}
+
+.rc-navbar-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 2px;
+  background: var(--accent-primary);
+  border-radius: 2px;
+}
+
+.rc-navbar-link--accent {
+  color: var(--accent-primary) !important;
+  font-weight: 600;
+}
+
+.rc-navbar-link--accent:hover {
+  background: var(--accent-primary-glow) !important;
+}
+
+.rc-navbar-link--danger {
+  color: var(--color-danger) !important;
+}
+
+.rc-navbar-link--danger:hover {
+  background: var(--color-danger-bg) !important;
+}
+
+/* ── Hamburger Button (Mobile) ─────────────────────────── */
+.rc-navbar-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.rc-navbar-burger:hover {
+  background: var(--color-surface-hover);
+}
+
+.rc-navbar-burger svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ── Mobile Menu ───────────────────────────────────────── */
+.rc-navbar-mobile {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(6, 8, 15, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 99;
+  padding: 24px;
+  animation: fadeIn 0.2s var(--ease-out);
+}
+
+.rc-navbar-mobile.open {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rc-navbar-mobile .rc-navbar-link {
+  padding: 14px 20px;
+  font-size: 16px;
+  border-radius: var(--radius-md);
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .rc-navbar {
+    padding: 0 16px;
+  }
+
+  .rc-navbar-links {
+    display: none;
+  }
+
+  .rc-navbar-burger {
+    display: flex;
+  }
+}

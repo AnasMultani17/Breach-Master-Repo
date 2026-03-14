@@ -1,6 +1,7 @@
 // src/pages/AuthPage.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./AuthPage.css";
 
 const API_BASE_URL = "http://localhost:8080/api/v1/users";
 
@@ -11,7 +12,7 @@ function AuthPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,7 +25,7 @@ function AuthPage() {
     setLoading(true);
 
     const endpoint = mode === "signup" ? "/register" : "/login";
-    
+
     try {
       const res = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: "POST",
@@ -52,31 +53,36 @@ function AuthPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ width: "400px", padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
-        <div style={{ display: "flex", marginBottom: "20px" }}>
-          <button onClick={() => setMode("login")} style={{ flex: 1, background: mode === "login" ? "#ddd" : "#fff" }}>Login</button>
-          <button onClick={() => setMode("signup")} style={{ flex: 1, background: mode === "signup" ? "#ddd" : "#fff" }}>Sign Up</button>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-brand">
+          <div className="auth-brand-name">Recruise</div>
+          <p className="auth-brand-tagline">Smart Recruitment Platform</p>
         </div>
-        
-        <form onSubmit={handleSubmit}>
+
+        <div className="auth-tabs">
+          <button className={`auth-tab${mode === "login" ? " active" : ""}`} onClick={() => setMode("login")}>Login</button>
+          <button className={`auth-tab${mode === "signup" ? " active" : ""}`} onClick={() => setMode("signup")}>Sign Up</button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
           {mode === "signup" && (
             <>
-              <input name="firstName" placeholder="First Name" onChange={handleChange} required style={{ width: "95%", marginBottom: "10px", padding: "8px" }} />
-              <input name="lastName" placeholder="Last Name" onChange={handleChange} required style={{ width: "95%", marginBottom: "10px", padding: "8px" }} />
+              <input name="firstName" placeholder="First Name" onChange={handleChange} required className="auth-input" />
+              <input name="lastName" placeholder="Last Name" onChange={handleChange} required className="auth-input" />
             </>
           )}
-          <input name="email" type="email" placeholder="Email" onChange={handleChange} required style={{ width: "95%", marginBottom: "10px", padding: "8px" }} />
-          <input name="password" type="password" placeholder="Password" onChange={handleChange} required style={{ width: "95%", marginBottom: "10px", padding: "8px" }} />
+          <input name="email" type="email" placeholder="Email" onChange={handleChange} required className="auth-input" />
+          <input name="password" type="password" placeholder="Password" onChange={handleChange} required className="auth-input" />
           {mode === "signup" && (
-            <input name="appPassword" type="password" placeholder="App Password" onChange={handleChange} required style={{ width: "95%", marginBottom: "10px", padding: "8px" }} />
+            <input name="appPassword" type="password" placeholder="App Password" onChange={handleChange} required className="auth-input" />
           )}
-          
-          <button type="submit" disabled={loading} style={{ width: "100%", padding: "10px" }}>
+
+          <button type="submit" disabled={loading} className="auth-submit">
             {loading ? "Loading..." : mode === "signup" ? "Create Account" : "Sign In"}
           </button>
         </form>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <div className="auth-error">{error}</div>}
       </div>
     </div>
   );

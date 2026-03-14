@@ -25,14 +25,15 @@ The frontend should be a **modern, dynamic, professional-looking HR dashboard** 
 | Route | Page | Purpose |
 |-------|------|---------|
 | `/` | **AuthPage** | Login / Signup toggle for HR users |
-| `/dashboard` | **AllCandidates** | Global talent pool with AI-powered search bar, sync buttons, candidate cards |
+| `/dashboard` | **AllCandidates** | Global talent pool, sync buttons, candidate cards |
 | `/jobs` | **JobBoard** | View all active job roles, create new jobs, click to open pipeline |
-| `/portal` | **JobPortal** | Per-job candidate pipeline with stage tabs, AI Smart Match, drag-n-drop stage changes |
+| `/portal` | **JobPortal** | Per-job candidate pipeline with stage tabs, AI Smart Match, drag-n-drop stage changes. Stage changes trigger automatic email notifications to candidates |
 | `/upload` | **UploadPage** | Drag-and-drop PDF resume upload to Cloudinary |
+| `/ai-hub` | **AiHub** | AI Hub with two tabs: AI Chat (semantic candidate search) and AI Actions (natural language recruiter actions like "Move Priya to Round 2") |
 | `*` | Redirect to `/` | Catch-all |
 
 ### Navigation Bar (present on all pages except AuthPage)
-Links: "All Candidates" (`/dashboard`), "Job Board" (`/jobs`), "Upload Resume" (`/upload`), "Logout" (`/`)
+Links: "All Candidates" (`/dashboard`), "Job Board" (`/jobs`), "AI Hub" (`/ai-hub`), "Upload Resume" (`/upload`), "Logout" (`/`)
 
 ---
 
@@ -176,7 +177,7 @@ Fetch all candidates. Optionally filter by role.
 ---
 
 #### PUT `/api/v1/users/stage/:id`
-Update a candidate's pipeline stage.
+Update a candidate's pipeline stage. **Automatically sends an email notification** to the candidate based on the new stage (Round 1 selection, Round 2 promotion, Hired congratulations, or Rejection notice).
 
 **URL Parameters:**
 | Param | Type | Description |
@@ -192,7 +193,19 @@ Update a candidate's pipeline stage.
 
 **Valid stage values:** `"Applied"`, `"Round 1"`, `"Round 2"`, `"Hired"`, `"Rejected"`
 
-**Success Response (200):** Returns the updated candidate object.
+**Stage Transition Rules:**
+| Target Stage | Allowed From |
+|---|---|
+| Round 1 | Applied |
+| Round 2 | Round 1 |
+| Hired | Round 2 |
+| Rejected | Applied, Round 1, Round 2 |
+
+**Success Response (200):** Returns the updated candidate object with `emailSent: true/false`.
+
+**Error Responses:**
+- `400` -- Invalid stage transition (e.g., trying to hire from Applied)
+- `404` -- Candidate not found
 
 ---
 
@@ -547,12 +560,13 @@ Raw semantic search against Pinecone (no AI chat layer).
 ### 5. AUTOMATED ACTIONS
 
 #### POST `/api/actions/automated`
-Execute recruiter actions via natural language.
+Execute recruiter actions via natural language. Supports multi-turn conversation for ambiguity resolution.
 
 **Request Body:**
 ```json
 {
-  "command": "Move 507f1f77bcf86cd799439011 to round1 and hire 507f1f77bcf86cd799439012"
+  "command": "Move Priya to Round 2",
+  "session_id": "optional_session_id"
 }
 ```
 
@@ -560,10 +574,33 @@ Execute recruiter actions via natural language.
 ```json
 {
   "success": true,
+  "session_id": "action_default",
   "actions_executed": [
-    { "action": "move_stage", "candidate_id": "507f...", "new_stage": "Round 1", "status": "done" },
-    { "action": "hire", "candidate_id": "507f...", "new_stage": "Hired", "status": "done" }
-  ]
+    {
+      "action": "move_stage",
+      "status": "done",
+      "candidate_id": "507f...",
+      "new_stage": "Round 2",
+      "message": "Moved Priya Sharma to Round 2"
+    }
+  ],
+  "summary": "Moved Priya Sharma to Round 2"
+}
+```
+
+**Ambiguity Response (400):** When multiple candidates match:
+```json
+{
+  "success": false,
+  "needs_clarification": true,
+  "clarification_question": "Multiple candidates found. Which one did you mean?",
+  "ambiguous_matches": [
+    { "fullName": "Priya Sharma", "applied_role": "software development", "applicationStage": "Applied", "mongo_id": "..." },
+    { "fullName": "Priya Patel", "applied_role": "data science", "applicationStage": "Round 1", "mongo_id": "..." }
+  ],
+  "summary": "Multiple candidates found...",
+  "session_id": "action_default",
+  "actions_executed": []
 }
 ```
 
@@ -738,10 +775,6 @@ Sync a single candidate from MongoDB to Pinecone.
   1. `GET /api/candidates/sync` (Gmail sync)
   2. `GET /api/candidates/sync-hrms` (HRMS sync)
   3. Re-fetches candidates
-- **AI Search Bar** at the top:
-  - User types natural language query (e.g., "Find top React developers")
-  - On submit: `POST http://localhost:5001/api/chat` with `{ session_id: random, message: query }`
-  - Display AI response (can be text or candidate cards)
 - **Candidate Cards Grid** showing:
   - fullName, email, location (city, state), applied_role, skills (as badges), totalExperienceYears
 
@@ -760,7 +793,9 @@ Sync a single candidate from MongoDB to Pinecone.
   - Applied -> "Move to Round 1" button
   - Round 1 -> "Move to Round 2" button
   - Round 2 -> "Hire" and "Reject" buttons
+  - Any stage (except Hired) -> "Reject" button
   - API call: `PUT /api/v1/users/stage/{candidateId}` with `{ stage: "Round 1" }` etc.
+  - **Automatic email notification** is sent to the candidate on every stage change (Round 1 selection, Round 2 promotion, Hired congratulations, Rejection notice). The UI should show a success toast confirming email was sent (response includes `emailSent: true/false`).
 - **AI Smart Match** (on "Applied" tab only):
   1. Fetch eligible candidates: `GET /api/v1/users/ai-match-filter?role={job.title}`
   2. Get their IDs, send to AI: `POST http://localhost:5001/api/match/job-description` with `{ job_description, candidate_ids, top_k: 3 }`
@@ -773,6 +808,23 @@ Sync a single candidate from MongoDB to Pinecone.
 - Upload: `POST /api/v1/users/upload-manual` as `multipart/form-data` with fields `pdfFile` and optional `appliedRole`
 - Show upload progress states: idle, processing, success, error
 - On success, display the returned Cloudinary PDF URL as a clickable link
+
+### Page 6: AiHub (`/ai-hub`) -- AI Command Center
+- **Two-tab interface** with a purple toggle bar:
+  - **Tab 1: AI Chat** -- Full conversational AI interface
+    - Chat-style message bubbles (user = purple, AI = gray)
+    - Input field at the bottom + Send button
+    - Session-based conversation (generate random `session_id` on mount, preserve across messages)
+    - API: `POST http://localhost:5001/api/chat` with `{ session_id, message }`
+    - AI response can be text (display as bubble) or structured data (display formatted)
+    - Example queries: "Find top React developers", "Compare Priya and Rahul", "Who has the most Python experience?"
+  - **Tab 2: AI Actions** -- Natural language recruiter action executor
+    - Command input + Execute button
+    - Shows action results as cards (success/error/clarification)
+    - API: `POST http://localhost:5001/api/actions/automated` with `{ command, session_id }`
+    - Handles ambiguity: if multiple candidates match a name, shows clarification with candidate list
+    - Example commands: "Move Priya to Round 2", "Hire Rahul", "Reject John for software development"
+    - Response includes `summary` (human-readable) and `actions_executed` array
 
 ---
 
@@ -803,11 +855,12 @@ Browser (React Frontend :5173)
   |       |
   |       |-- MongoDB Atlas (candidates, hr, jobs collections)
   |       |-- Cloudinary (PDF storage)
+  |       |-- Nodemailer/Gmail (automatic candidate email notifications on stage changes)
   |       |-- Data-Extraction (:8000) -- Gemini AI resume parsing
   |       |-- Email Scraper (:5003) -- Gmail IMAP email fetcher
   |       |-- Chat-Bot (:5001) /api/sync/all -- post-sync Pinecone update
   |
-  |-- AI Chat & AI Smart Match
+  |-- AI Chat & AI Actions (via AI Hub page)
           |
           v
       Chat-Bot Flask (:5001)

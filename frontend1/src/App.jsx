@@ -4,7 +4,6 @@ import AllCandidates from "./pages/AllCandidates";
 import JobBoard from "./pages/JobBoard";
 import JobPortal from "./pages/JobPortal";
 import UploadPage from "./pages/UploadPage";
-import ChatPanel from "./components/ChatPanel";
 import { ToastProvider } from "./components/Toast";
 
 function App() {
@@ -19,11 +18,9 @@ function App() {
           <Route path="/upload" element={<UploadPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-        <ChatPanel />
       </BrowserRouter>
     </ToastProvider>
   );
 }
 
 export default App;
-

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import './UploadPage.css';
 
 const API_BASE = 'http://localhost:8080/api/v1/users';
 
@@ -61,66 +62,45 @@ const UploadPage = () => {
     }
   };
 
-  const styles = {
-    container: { fontFamily: 'system-ui, sans-serif', backgroundColor: '#f4f7f6', minHeight: '100vh' },
-    main: { padding: '50px 20px', maxWidth: '800px', margin: '0 auto' },
-    card: { backgroundColor: 'white', padding: '40px', borderRadius: '20px', boxShadow: '0 15px 35px rgba(0,0,0,0.1)' },
-    dropzone: (isIdle) => ({
-      border: '3px dashed #3498db',
-      borderRadius: '15px',
-      padding: '50px',
-      textAlign: 'center',
-      backgroundColor: '#f8fbff',
-      cursor: isIdle ? 'pointer' : 'not-allowed',
-      marginBottom: '30px',
-      transition: 'all 0.3s ease'
-    }),
-    input: { width: '100%', padding: '15px', marginBottom: '20px', borderRadius: '10px', border: '1px solid #ddd', fontSize: '18px', boxSizing: 'border-box' },
-    btn: { width: '100%', padding: '18px', backgroundColor: '#2c3e50', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', fontSize: '18px', cursor: 'pointer' },
-    statusBox: (s) => ({
-      marginTop: '25px', padding: '20px', borderRadius: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '16px',
-      backgroundColor: s === 'success' ? '#d4edda' : s === 'error' ? '#f8d7da' : '#e1f5fe',
-      color: s === 'success' ? '#155724' : s === 'error' ? '#721c24' : '#01579b'
-    })
-  };
+  const isInteractive = status === 'idle' || status === 'error';
 
   return (
-    <div style={styles.container}>
+    <div className="up-page">
       <Navbar />
-      <main style={styles.main}>
-        <div style={styles.card}>
-          <h1 style={{ textAlign: 'center', color: '#2c3e50', marginBottom: '10px' }}>Upload PDF</h1>
-          <p style={{ textAlign: 'center', color: '#7f8c8d', marginBottom: '40px' }}>Upload a PDF. It will be stored in Cloudinary and you will get the PDF URL.</p>
+      <main className="up-main">
+        <div className="up-card">
+          <h1 className="up-title">Upload PDF</h1>
+          <p className="up-subtitle">Upload a PDF. It will be stored in Cloudinary and you will get the PDF URL.</p>
 
           <form onSubmit={handleProcess}>
-            <label style={{ fontWeight: 'bold', display: 'block', marginBottom: '10px' }}>Job Role (optional)</label>
-            <input 
-              style={styles.input} 
-              placeholder="e.g. Senior Software Engineer" 
-              value={role} 
+            <label className="up-label">Job Role (optional)</label>
+            <input
+              className="up-input"
+              placeholder="e.g. Senior Software Engineer"
+              value={role}
               onChange={(e) => setRole(e.target.value)}
               disabled={status === 'processing'}
             />
 
-            <div 
-              style={styles.dropzone(status === 'idle' || status === 'error')}
+            <div
+              className={`up-dropzone${!isInteractive ? ' disabled' : ''}`}
               onDragOver={handleDragOver}
               onDrop={handleDrop}
-              onClick={() => (status === 'idle' || status === 'error') && document.getElementById('fileIn').click()}
+              onClick={() => isInteractive && document.getElementById('fileIn').click()}
             >
               <input id="fileIn" type="file" hidden accept=".pdf" onChange={(e) => { setFile(e.target.files[0]); setStatus('idle'); }} />
-              <div style={{ fontSize: '60px', marginBottom: '15px' }}>{file ? '📄' : '📁'}</div>
-              <h3 style={{ margin: 0 }}>{file ? file.name : "Drag & Drop Resume PDF here"}</h3>
-              <p style={{ color: '#95a5a6', marginTop: '10px' }}>Max file size: 5MB</p>
+              <span className="up-dropzone-icon">{file ? '📄' : '📁'}</span>
+              <div className="up-dropzone-text">{file ? file.name : "Drag & Drop Resume PDF here"}</div>
+              <div className="up-dropzone-hint">Max file size: 5MB</div>
             </div>
 
-            <button type="submit" style={styles.btn} disabled={status === 'processing'}>
+            <button type="submit" className="up-submit" disabled={status === 'processing'}>
               {status === 'processing' ? 'Uploading...' : 'Upload PDF'}
             </button>
           </form>
 
           {status !== 'idle' && (
-            <div style={styles.statusBox(status)}>
+            <div className={`up-status up-status--${status}`}>
               {status === 'processing' && "⏳ "}{progressMsg}
               {status === 'success' && pdfUrl && (
                 <div style={{ marginTop: 12, wordBreak: 'break-all', fontSize: 14 }}>
