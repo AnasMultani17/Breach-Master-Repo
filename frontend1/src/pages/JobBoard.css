@@ -1,0 +1,193 @@
+/* JobBoard Page Styles */
+
+/* Create Card */
+.jb-create-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.jb-create-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-blue-glow);
+  color: var(--accent-blue);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.jb-create-content {
+  flex: 1;
+  min-width: 200px;
+}
+
+.jb-create-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.jb-create-content p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.jb-create-form {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.jb-create-form .input {
+  width: 280px;
+}
+
+/* Sections */
+.jb-section {
+  margin-bottom: 32px;
+}
+
+.jb-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.jb-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jb-count {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Status Dot */
+.jb-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.jb-status-active {
+  background: var(--accent-green);
+  box-shadow: 0 0 6px var(--accent-green-glow);
+}
+
+/* Job Card */
+.jb-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.jb-card:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 4px 20px var(--accent-blue-glow);
+  transform: translateY(-3px);
+}
+
+.jb-card-completed {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.jb-card-completed:hover {
+  border-color: var(--border-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+.jb-card-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.jb-card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent-blue);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.jb-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.jb-card-date {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 2px 0 0 0;
+}
+
+.jb-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.jb-card-arrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  transition: gap var(--transition-base);
+}
+
+.jb-card:hover .jb-card-arrow {
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .jb-create-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .jb-create-form {
+    width: 100%;
+    flex-direction: column;
+  }
+  .jb-create-form .input {
+    width: 100%;
+  }
+}

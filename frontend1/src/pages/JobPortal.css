@@ -1,0 +1,183 @@
+/* JobPortal Page Styles */
+
+.jp-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.jp-header {
+  margin-bottom: 24px;
+}
+
+.jp-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* AI Panel */
+.jp-ai-panel {
+  background: var(--bg-card);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.jp-ai-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-ai);
+}
+
+.jp-ai-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.jp-ai-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-purple);
+  margin: 0 0 4px 0;
+}
+
+.jp-ai-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.jp-ai-divider {
+  height: 1px;
+  background: rgba(168, 85, 247, 0.15);
+  margin: 20px 0;
+}
+
+.jp-ai-matches {
+  overflow: hidden;
+}
+
+/* Modal */
+.jp-modal-icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* AI Command Bar */
+.jp-cmd-panel {
+  margin-bottom: 20px;
+}
+
+.jp-cmd-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-md);
+  padding: 8px 8px 8px 16px;
+  transition: all var(--transition-base);
+}
+
+.jp-cmd-bar:focus-within {
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 0 3px var(--accent-amber-glow);
+}
+
+.jp-cmd-bolt {
+  color: var(--accent-amber);
+  flex-shrink: 0;
+  animation: float 2s ease-in-out infinite;
+}
+
+.jp-cmd-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 8px 0;
+  outline: none;
+}
+
+.jp-cmd-input::placeholder {
+  color: var(--text-muted);
+}
+
+.jp-cmd-results {
+  margin-top: 12px;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.jp-cmd-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.jp-cmd-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jp-cmd-action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+}
+
+.jp-cmd-action-type {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+/* Action Execute Button (shared with AllCandidates) */
+.btn-action-execute {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  box-shadow: 0 2px 10px var(--accent-amber-glow);
+}
+
+.btn-action-execute:hover {
+  box-shadow: 0 4px 20px var(--accent-amber-glow);
+}
+
+@media (max-width: 768px) {
+  .jp-ai-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .jp-top-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}
